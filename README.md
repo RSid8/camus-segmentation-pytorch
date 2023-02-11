@@ -42,7 +42,7 @@ model = model.to(device)
 
 # the usual training loop goes here...
 ```
-
+Added a dataset and training loop to the implementation
 ## References
 - [Deep Learning for Segmentation using an Open  Large-Scale Dataset in 2D Echocardiography](https://arxiv.org/pdf/1908.06948.pdf)
 - [CAMUS project](https://www.creatis.insa-lyon.fr/Challenge/camus/)
