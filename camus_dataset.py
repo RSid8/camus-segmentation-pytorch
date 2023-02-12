@@ -91,26 +91,50 @@ class Camus(Dataset):
         if self.split == "train" or self.split == "val":
             data = {
                 "patient": patient_file,
-                "2CH_ED": image_2CH_ED.astype(np.uint8),
-                "2CH_ES": image_2CH_ES.astype(np.uint8),
-                "4CH_ED": image_4CH_ED.astype(np.uint8),
-                "4CH_ES": image_4CH_ES.astype(np.uint8),
+                "2CH_ED": self.augment_transforms(
+                    resize(image_2CH_ED.astype(np.uint8), [224, 224])
+                ),
+                "2CH_ES": self.augment_transforms(
+                    resize(image_2CH_ES.astype(np.uint8), [224, 224])
+                ),
+                "4CH_ED": self.augment_transforms(
+                    resize(image_4CH_ED.astype(np.uint8), [224, 224])
+                ),
+                "4CH_ES": self.augment_transforms(
+                    resize(image_4CH_ES.astype(np.uint8), [224, 224])
+                ),
                 "2CH_sequence": image_2CH_sequence,
                 "4CH_sequence": image_4CH_sequence,
-                "2CH_ED_gt": image_2CH_ED_gt.astype(np.uint8),
-                "2CH_ES_gt": image_2CH_ES_gt.astype(np.uint8),
-                "4CH_ED_gt": image_4CH_ED_gt.astype(np.uint8),
-                "4CH_ES_gt": image_4CH_ES_gt.astype(np.uint8),
+                "2CH_ED_gt": torch.tensor(
+                    resize(image_2CH_ED.astype(np.uint8), [224, 224])
+                ),
+                "2CH_ES_gt": torch.tensor(
+                    resize(image_2CH_ES.astype(np.uint8), [224, 224])
+                ),
+                "4CH_ED_gt": torch.tensor(
+                    resize(image_4CH_ED.astype(np.uint8), [224, 224])
+                ),
+                "4CH_ES_gt": torch.tensor(
+                    resize(image_4CH_ES.astype(np.uint8), [224, 224])
+                ),
                 "info_2CH": info_2CH,  # Dictionary of infos
                 "info_4CH": info_4CH,
             }  # Dictionary of infos
         elif self.split == "test":
             data = {
                 "patient": patient_file,
-                "2CH_ED": image_2CH_ED,
-                "2CH_ES": image_2CH_ES,
-                "4CH_ED": image_4CH_ED,
-                "4CH_ES": image_4CH_ES,
+                "2CH_ED": self.augment_transforms(
+                    resize(image_2CH_ED.astype(np.uint8), [224, 224])
+                ),
+                "2CH_ES": self.augment_transforms(
+                    resize(image_2CH_ES.astype(np.uint8), [224, 224])
+                ),
+                "4CH_ED": self.augment_transforms(
+                    resize(image_4CH_ED.astype(np.uint8), [224, 224])
+                ),
+                "4CH_ES": self.augment_transforms(
+                    resize(image_4CH_ES.astype(np.uint8), [224, 224])
+                ),
                 "2CH_sequence": image_2CH_sequence,
                 "4CH_sequence": image_4CH_sequence,
                 "info_2CH": info_2CH,  # Dictionary of infos
@@ -167,3 +191,17 @@ class ResizeImagesAndLabels(object):
             data[field] = data[field].transpose([2, 0, 1])
 
         return data
+
+
+if __name__ == "__main__":
+    global_transforms = transforms.Resize(size=[224, 224])
+    augment_transforms = transforms.ToTensor()
+    root = "/home/sidharth/Desktop/CAMUS_public/database/"
+    train_dataset = Camus(
+        root=root,
+        split="train",
+        global_transforms=global_transforms,
+        augment_transforms=augment_transforms,
+    )
+    data = train_dataset[0]
+    print(data)
